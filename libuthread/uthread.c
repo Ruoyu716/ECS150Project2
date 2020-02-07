@@ -74,23 +74,13 @@ void uthread_yield(void)
     queue_enqueue(readyQ,curThread);
     preempt_enable();
   }
-  printf("de1\n");
   preempt_disable();
-  printf("de2\n");
   queue_dequeue(readyQ, (void**)&nextThread);
-  printf("de3\n");
   preempt_enable();
-  printf("de4\n");
-  // if (next != -1){
   curThread->state = ready;
-  printf("de5\n");//stop from running.but do we really need this line?
   nextThread->state = running;
-  printf("de6\n");
   curThread = nextThread;
-  printf("de7\n");
   uthread_ctx_switch(oldThread->ctxt,nextThread->ctxt);
-  printf("de8\n");
-  //}
 }
 
 uthread_t uthread_self(void)
@@ -233,13 +223,9 @@ int uthread_join(uthread_t tid, int *retval)
     preempt_disable();
     queue_delete(readyQ,foundR);
     preempt_enable();
-
-    printf("7\n");
-
+	  
     uthread_yield();
-    printf("8\n");
   }
-  printf("9\n");
   preempt_disable();
   int isFoundZ = queue_iterate(zombieQ, (queue_func_t)findJoin, (void*)&tid,(void**)foundZ);
   preempt_enable();
