@@ -1,28 +1,25 @@
 # Target library
-lib 	:= libuthread.a
-targets	:= $(lib)
-objs	:= queue.o uthread.o context.o preempt.o
+lib := libuthread.a
 
-CC	:= gcc
-CFLAGS	:= -Wall -Werror 
+objs    := preempt.o context.o uthread.o queue.o
+
+all: $(lib)
+
+CC      := gcc
+CFLAGS  := -Wall -Wextra -Werror
 CFLAGS  += -g
 
+ifneq ($(V),1)
+Q = @
+endif
 
-
-all: $(targets)
-
-deps	:= $(patsubt %.o,%.d,$(objs))
--include $(deps)
-DEPFLAGS = -MMD -MF $(@:.o=.d)
+%.o: %.c %.h
+	@echo "CC   $@"
+	$(Q)$(CC) $(CFLAGS) -c -o $@ $<
 
 $(lib): $(objs)
-	@echo "make lib"
-	$(Q)ar rcs $(lib) $(targets)
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $< $(DEPFLAGS)
+	ar rcs $@ $^
 
 clean:
-	@echo "CLEAN"
-	$(Q)rm -f $(targets) $(objs) $(deps) *.d
-
+	@echo "CLEAN   $@"
+	$(Q)rm -f $(objs) *.a
