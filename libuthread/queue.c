@@ -72,10 +72,6 @@ int queue_enqueue(queue_t queue, void *data)
     //currently data of tail is NULL
     queue->head->data = data;
     queue->head->next = NULL;
-    //queue->tail=queue->head;
-    //queue->tail->next = NULL;
-    //queue->tail = NULL;//can set a node to null?
-
   }else{
     queue->tail->next = (struct QNode*)malloc(sizeof(struct QNode));
     if(queue->tail == NULL){
@@ -98,43 +94,28 @@ int queue_dequeue(queue_t queue, void **data)
   if(queue == NULL || data == NULL || queue->size == 0){
     return -1;
   }
-  printf("DQ1\n");
   struct QNode* tmpNode = malloc(sizeof(struct QNode));
-  printf("DQ2\n");
-  if(!tmpNode){
-    printf("DQ3\n");
+  if(!tmpNode){;
     return -1;
   }
-  printf("DQ4\n");
 
   if(queue->size==1){
-    printf("DQ5\n");
     *data = queue->head->data;
-    printf("DQ6\n");
     queue->head = NULL;
-    printf("DQ7\n");
     queue->size -= 1;
-    printf("DQ8\n");
 
   }else{
-    printf("DQ9\n");
     *data = queue->head->data;
-    printf("DQ10\n");
     tmpNode = queue->head->next;
     free(queue->head);
-    printf("DQ11\n");
     queue->head = tmpNode;
-    printf("DQ12\n");
     queue->size -= 1;
-    printf("DQ13\n");
   }
-  printf("DQ14\n");
   return 0;
 }
 
 int queue_delete(queue_t queue, void *data)
 {
-	/* TODO Phase 1 */
   if(queue == NULL || data == NULL || queue->size == 0){
     return -1;
   }
