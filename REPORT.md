@@ -1,34 +1,62 @@
 
 # Project 2 Report
 ---
-### Part 1 Queue fuctions(queue.c)
+### Part 1 Queue API(queue.c)
 ___
-**nodes**
+Overall, we implement a simple FIFO queue based on linked list idea 
+that allows user to add new items to the end of queue and remove
+items from the head of queue(the least recent items in other word)
 
-In order to get a queue that has a first in first out data structure,
-we make a stuct "QNode"which contains its own data and address to 
-next nodes,thus we can make queue as a linked nodes which has a head
-and tail as it first and last nodes.
+**Data Structure :**
 
-**create a queue**
+**structure nodes**
 
-In order to create a queue First, we need to allocate memory for it.
-Then initial a queue contains only NULL head and tail.
+Each node has void pointer that holds the data and a struct pointer
+that holds the node following it.
+
+**structure queue**
+
+Each queue has a head node and a tail node which means the first and 
+last items in a queue, and it also has a integer variable 'size' to
+store the size of queue.
+
+**Create a queue**
+
+A empty queue is created here with two null pointers, head and tail
+and its initial size of 0
 
 **Destroy a queue**
 
-Simply deallocate queue by free the memory.
+We deallocate the queue and return 0, and if queue is NULL,return 
+-1.
 
-**Enqueue and dequeue**
+**Enqueue**
 
-when enqueue we need to first allocate a new node that contains
-new data, then link the node to queue we want to attach by 
-eplacing the NULL tail fo the old queue, or otherwise, the next of 
-old tail.
+When doing enqueue, we add the new item to the end of the queue by
+calling function queue_enqueue(). And it will return -1 for 
+failure on memory allocating,NULL data and NULL queue. In this 
+process, a new node is created to link to previous tail node and 
+become the new tail node. Lastly, update the queue size.
 
-For dequeue, we need to take out the first nodes we put in the
-queue, that is, the head. Then make the next of head to be the
-new head.
+**Dequeue**
+
+When doing dequeue, we pull out the least recent node in the queue
+by calling function queue_dequeue(). And it will return -1 for 
+NULL data and empty queue. In this process, data of removed node
+will be stored in another pointer, then free the previous head 
+node and update queue size.
+
+**Delete**
+
+When doing delete, we search in the specified queue from its 
+head node, when target is found, let its parent node point 
+to its child node, and update queue size.
+
+**Iteration**
+
+When doing iteration, we use a while loop to go through the 
+specified queue to invoke call back function on each node.
+It wil return -1 for NULL queue and NULL fuction.
 
 ___
 ### Part 2 thread fuctions(thread.c)
@@ -72,4 +100,7 @@ ___
 ### Part 3 preempt
 
 a timer which will using a SIGVTALRM signal to yields a hundred
-times per second.
+times per second. THe preemption should be invoked whenever a user
+thread is running. We call preempt_start() to active the timer 
+once we initialized our main thread. We also set the timer to 
+be expired after 100 seconds
